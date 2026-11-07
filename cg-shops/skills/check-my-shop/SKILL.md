@@ -1,6 +1,6 @@
 ---
 name: check-my-shop
-description: Check how a CG Shops shop or website that was drafted is doing, such as whether the claim form was sent, whether it is still building, or whether it is ready and at what address. Use when someone asks about the status or progress of their CG Shops shop, their claim link, or a request id.
+description: Check how a CG Shops online shop that was drafted is doing, such as whether the claim form was sent, whether it is still building, or whether it is ready and at what address. Use when someone asks about the status or progress of their CG Shops shop, their claim link, or a request id.
 ---
 
 # Check my shop
@@ -47,9 +47,6 @@ Report what the tool returns. Never add to it.
   failure.
 - `removed`: the shop was removed and its data is being erased. Nothing can be
   rebuilt or recovered. Do not offer a new shop in the same breath.
-
-For a website (`mode: site`), say "website", not "shop", and do not mention
-orders or payments.
 
 Never say a shop is ready or live unless the status is `ready`.
 

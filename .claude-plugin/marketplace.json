@@ -9,7 +9,7 @@
     {
       "name": "cg-shops",
       "source": "./cg-shops",
-      "description": "Build an online shop or a simple business website on CG Shops by talking with Claude, in any country."
+      "description": "Build an online shop on CG Shops by talking with Claude, in any country."
     }
   ]
 }

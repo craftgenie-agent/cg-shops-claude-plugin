@@ -1,19 +1,17 @@
 # CG Shops
 
-Build an online shop or a simple business website on [CG Shops](https://www.cgshops.com/en)
-by talking with Claude. CG Shops is made by Aspar Software. It works for
+Build an online shop on [CG Shops](https://www.cgshops.com/en) by talking
+with Claude. CG Shops is made by Aspar Software. It works for
 businesses in any country. Shops are built in English or Bulgarian today.
 
 ## What it does
 
-- **Build a shop or a website.** Tell Claude what you sell, the shop's name,
-  your country and currency, and your products and prices. Or ask for a few
-  suggested products, or a sample catalogue to replace later. For a business
-  that only needs to be found, ask for a website with pages and contact
-  details. Claude asks the few questions it needs in one message, drafts the
-  shop and gives you a link to a CG Shops page. There you check the draft,
-  enter your name and email and accept the terms. Nothing is built until you
-  send that form.
+- **Build a shop.** Tell Claude what you sell, the shop's name, your country
+  and currency, and your products and prices. Or ask for a few suggested
+  products, or a sample catalogue to replace later. Claude asks the few
+  questions it needs in one message, drafts the shop and gives you a link to a
+  CG Shops page. There you check the draft, enter your name and email and
+  accept the terms. Nothing is built until you send that form.
 - **Check your shop.** Ask how your shop is doing. Claude reads the build
   status and tells you when it is ready, with its address.
 - **Run your shop with Claude.** Once your shop is built, Claude explains how
@@ -21,6 +19,7 @@ businesses in any country. Shops are built in English or Bulgarian today.
   products and settings by chatting. That assistant has its own address and
   sign-in for each shop, and you add it yourself.
 
+The plugin builds online shops only. A separate website builder is coming.
 Claude tells you honestly what works in your country and what does not yet.
 For example, the built-in couriers deliver in Bulgaria only so far.
 
@@ -33,7 +32,8 @@ For example, the built-in couriers deliver in Bulgaria only so far.
      Studio, in Bulgaria, prices in EUR."
    - "Make a shop for my ceramics in Ireland, prices in EUR: mug 18, bowl 22,
      vase 48."
-   - "I need a simple website for my restaurant."
+   - "I offer yoga classes in Berlin. Make me a shop to sell class passes,
+     prices in EUR."
    - "How is my CG Shops request doing?"
 3. Open the link Claude gives you and send the form there.
 
@@ -72,8 +72,7 @@ Email **info@craftgenie.ai**, or see <https://www.cgshops.com/en>.
 
 ## На български
 
-С този плъгин Claude Ви помага да създадете онлайн магазин или уеб сайт в
-CG Shops. Кажете какво продавате, името на магазина, държавата, валутата и
+С този плъгин Claude Ви помага да създадете онлайн магазин в CG Shops. Кажете какво продавате, името на магазина, държавата, валутата и
 продуктите с цените. Claude задава няколко въпроса наведнъж, подготвя проект и
 Ви дава линк към страница на CG Shops. Там проверявате проекта, въвеждате име и
 имейл и приемате условията. Нищо не се изгражда, преди да изпратите формуляра.

@@ -16,7 +16,7 @@ what does not yet, before you draft the shop.
 - **VAT or sales tax:** the merchant's own rate, if they tell you, and whether
   their prices include it. Send `vatRate: 0` if they charge none. If they are
   not sure, leave it out: the claim page asks. Never guess a rate.
-- **Products, sample catalogues and websites:** the same everywhere.
+- **Products and sample catalogues:** the same everywhere.
 - **Cash on delivery:** can be on from the first day, for carts with
   something to ship. The merchant delivers and collects the money themselves.
 - **Card payments:** Stripe and PayPal, set up later in the shop's admin

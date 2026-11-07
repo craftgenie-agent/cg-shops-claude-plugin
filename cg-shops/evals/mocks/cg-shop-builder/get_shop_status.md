@@ -5,4 +5,4 @@ expect:
 
 HTTP 200 OK
 
-{"requestId":"{{input.requestId}}","status":"expired","mode":"shop"}
+{"requestId":"{{input.requestId}}","status":"expired"}

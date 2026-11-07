@@ -1,18 +1,17 @@
 ---
 name: build-a-shop
-description: Build an online shop or a simple business website on CG Shops from a short conversation. Use when someone wants to sell online, open a web shop or e-shop, put their products online, or make a website for their business, restaurant or services, in any country. Also use for requests in other languages, such as "искам онлайн магазин" or "направете ми сайт".
+description: Build an online shop on CG Shops from a short conversation. Use when someone wants to sell online, open a web shop or e-shop, or put their products or services online for sale, in any country. Also use for requests in other languages, such as "искам онлайн магазин". Also use when someone asks CG Shops for a website without a shop, to explain that this plugin builds online shops only.
 ---
 
 # Build a shop on CG Shops
 
-CG Shops (by Aspar Software) builds and hosts online shops and simple business
-websites. You help the person describe what they want, then you draft it with
+CG Shops (by Aspar Software) builds and hosts online shops. You help the person describe what they want, then you draft it with
 the CG Shops connector and give them a link where they check the draft and
 claim it. Nothing is built until they submit the form behind that link.
 
 The connector in this plugin is `cg-shop-builder`. It has two tools:
 
-- `create_shop`: drafts a new shop or website and returns a claim link.
+- `create_shop`: drafts a new online shop and returns a claim link.
 - `get_shop_status`: reports how a drafted shop is doing (see the
   `check-my-shop` skill).
 
@@ -70,26 +69,20 @@ Read what they already told you, then ask only what is missing, all in ONE
 message, with a sensible default for each so they can just say "yes". Do not
 send a form or one question per message. Typical questions:
 
-1. **Shop or website?** An online shop sells products. A website only shows
-   the business and its contact details, with no cart or payments. Ask only if
-   it is not clear.
-2. **What do you sell, and to whom?** In their own words.
-3. **The name** of the shop.
-4. **Country** where the business operates, and the **currency** for prices.
+1. **What do you sell, and to whom?** In their own words.
+2. **The name** of the shop.
+3. **Country** where the business operates, and the **currency** for prices.
    Never guess the currency from the country or the language: ask, and offer
    the likely one as the default ("EUR?").
-5. **Products and prices.** Offer three choices: they list products with
+4. **Products and prices.** Offer three choices: they list products with
    prices; you suggest a few for them to approve; or they start from a sample
    catalogue they replace later (candles, ceramics, jewelry, knitwear,
    services).
-6. **Are the prices with VAT included, and what VAT rate?** Only if they know.
+5. **Are the prices with VAT included, and what VAT rate?** Only if they know.
    If they are not VAT-registered, the rate is 0. If they are not sure, leave
    it out: the claim page asks.
-7. **Cash on delivery?** Should shoppers be able to pay the courier in cash?
+6. **Cash on delivery?** Should shoppers be able to pay the courier in cash?
    Cards and bank transfer are set up later.
-
-For a website, skip currency, VAT, payment and product questions, and ask
-instead for the public contact email or phone that the site should show.
 
 Do not ask for the owner's own email, name or password. They give those on the
 claim page. Contact details go in the draft only if they offer them for
@@ -124,8 +117,6 @@ Fill in only what the person said or approved. Never invent facts.
   downloads alone cannot be paid on delivery.
 - `contact` and `legal` (`companyName`, `vatId`, `legalRepresentative`): only
   what they offered for the shop's pages.
-- For a website: `mode: "site"`, `contact` with an email or phone, and
-  optionally `template` `business` or `restaurant`. No currency or products.
 
 Product photos are not sent here. The merchant adds them in the shop's admin.
 Copying products or photos from another website or shop is not offered: say
@@ -142,14 +133,10 @@ Each result starts with a status line such as `HTTP 201 Created`.
   2. The link works once and expires at `expiresAt` (give the date).
   3. The build takes a few minutes. Then they get an email "Your shop is
      ready" with the shop's address and a link to set their admin password.
-  4. What to do next in the admin depends on what was drafted:
-     - **A shop:** add product photos, set up payments, set the delivery
-       price, and read the legal pages. Use the country guide for what to say
-       here.
-     - **A website** (`mode: site`): check the pages and the contact details,
-       add a logo, and read the legal pages. A website has no products,
-       payments or delivery, so do not mention them.
-  5. They can ask you any time how it is doing.
+  4. In the admin they should next: add product photos, set up payments, set
+     the delivery price, and read the legal pages. Use the country guide for
+     what to say here.
+  5. They can ask you any time how the shop is doing.
 - **200 OK:** a replay of a request made before, with the same key. It has no
   claim link. Read its `status` first:
   - `draft`: if the claim link is still in this chat, give it again. If not,
@@ -181,6 +168,10 @@ Never make up a claim link, a status, a date or a feature.
   the shop's own admin.
 - CG Shops' own prices and plans. Do not quote them or sign anyone up in the
   chat. Say they are on www.cgshops.com.
+- A website without a shop (pages and contact details, nothing for sale):
+  this plugin builds online shops only. Say that a separate website builder
+  from CG Shops is coming, and offer an online shop if they want to sell
+  something. Do not call `create_shop` for a website.
 - Things CG Shops does not build, such as a marketplace for many sellers or a
   booking system. Explain the limit and what it can build, and let them
   decide.

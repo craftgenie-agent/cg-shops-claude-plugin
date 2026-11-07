@@ -31,11 +31,17 @@ as `cg-shops/evals/mocks/cg-shop-builder/_tools.json`):
 
 - `create_shop` ("Create a new shop"): write, idempotent, not destructive.
   Required: `idempotencyKey`, `brief` (40+ characters), `shopName`, `country`;
-  `currency` for a shop; `contact` (email or phone) for `mode: site`. Optional:
+  `currency`. Optional:
   `vatRate`, `pricesIncludeVat`, `cashOnDelivery`, `timezone`, `language`,
   `requestedSlug`, `legal`, `contact`, `productHints`, `template`. Templates:
-  `candles`, `ceramics`, `jewelry`, `knitwear`, `services`; for a site
-  `business`, `restaurant`. Currencies the euro replaced are refused.
+  `candles`, `ceramics`, `jewelry`, `knitwear`, `services`. Currencies the
+  euro replaced are refused.
+- **Shops only (owner, 2026-11-07).** The server's website mode (`mode: site`,
+  templates `business`, `restaurant`) is being removed from this endpoint and
+  moves to a separate future server and plugin ("CG Site Builder"). The skills
+  never use it, and `_tools.json` in the evals is the 2026-11-07 `tools/list`
+  with the website parts taken out. Asked for a website, Claude says this
+  plugin builds online shops only and a website builder is coming separately.
 - `get_shop_status` ("Check my shop"): read-only. Statuses `draft`, `claimed`,
   `building`, `ready`, `failed`, `expired`, `suspended`, `removed`.
 - Production lists only these two (`SHOP_BUILDER_MCP_TOOLS`), no sign-in, about

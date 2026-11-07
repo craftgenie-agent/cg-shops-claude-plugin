@@ -1,7 +1,7 @@
 # CG Shops plugin for Claude
 
 The CG Shops plugin for Claude, by Aspar Software. It helps a merchant in any
-country build an online shop or a business website on CG Shops from a
+country build an online shop on CG Shops from a
 conversation with Claude, and check how the shop is doing.
 
 The plugin itself is the [`cg-shops/`](cg-shops/) folder. Its

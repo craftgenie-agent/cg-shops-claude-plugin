@@ -3,7 +3,7 @@
   {
    "name": "create_shop",
    "title": "Create a new shop",
-   "description": "Draft a brand-new shop from what the customer describes: what they sell, the shop's name, its currency and country, and any products they name. Returns a claimUrl for the customer to finish on CG Shops' own site -- nothing is built until they submit it there. When the person names or approves products, send them as productHints and no template; use a template (candles, ceramics, jewelry, knitwear, services) only when they want a sample catalogue with no products of their own: a complete sample shop they replace later. For a website with no shop at all (pages, contact, no products or checkout), send mode \"site\", with the template business or restaurant if one fits; no currency is needed then.",
+   "description": "Draft a brand-new shop from what the customer describes: what they sell, the shop's name, its currency and country, and any products they name. Returns a claimUrl for the customer to finish on CG Shops' own site -- nothing is built until they submit it there. When the person names or approves products, send them as productHints and no template; use a template (candles, ceramics, jewelry, knitwear, services) only when they want a sample catalogue with no products of their own: a complete sample shop they replace later.",
    "inputSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -11,79 +11,9 @@
      "idempotencyKey",
      "brief",
      "shopName",
-     "country"
+     "country",
+     "currency"
     ],
-    "if": {
-     "required": [
-      "mode"
-     ],
-     "properties": {
-      "mode": {
-       "const": "site"
-      }
-     }
-    },
-    "then": {
-     "required": [
-      "contact"
-     ],
-     "not": {
-      "required": [
-       "importFrom"
-      ]
-     },
-     "properties": {
-      "productHints": {
-       "maxItems": 0
-      },
-      "template": {
-       "enum": [
-        "business",
-        "restaurant"
-       ]
-      },
-      "contact": {
-       "anyOf": [
-        {
-         "required": [
-          "email"
-         ],
-         "properties": {
-          "email": {
-           "pattern": "\\S"
-          }
-         }
-        },
-        {
-         "required": [
-          "phone"
-         ],
-         "properties": {
-          "phone": {
-           "pattern": "\\S"
-          }
-         }
-        }
-       ]
-      }
-     }
-    },
-    "else": {
-     "required": [
-      "currency"
-     ],
-     "properties": {
-      "template": {
-       "enum": [
-        "candles",
-        "ceramics",
-        "jewelry",
-        "knitwear",
-        "services"
-       ]
-      }
-     }
-    },
     "description": "What the agent learned in conversation. Commercial facts only — no personal data. Everything here is confirmable by the customer on the claim page, so prefer submitting your best understanding over interrogating them.",
     "properties": {
      "idempotencyKey": {
@@ -108,7 +38,7 @@
      "currency": {
       "type": "string",
       "pattern": "^[A-Z]{3}$",
-      "description": "ISO 4217, e.g. EUR. Required for a shop; leave it out for a site (`mode: site`), which prices nothing. Ask \"what currency do you price in?\" — it is an ordinary business question, and every generated price is denominated in it. Do not infer it from their language or country.\nIt must be a currency the shop can be PAID in. A currency the euro replaced is refused with EUR named in its place — BGN, HRK, the earlier accessions, and the microstate codes ADP, MCF, SML and VAL — because card processors no longer accept them. Convert the prices as well as the code: every price is read as being in the currency submitted, so relabelling alone reprices the whole shop. Submitting one anyway is refused with 422, which is the cheap place to find out: past this point the currency reaches the generated catalogue and every price in a running shop, and the failure becomes a refused card at the owner's first sale."
+      "description": "ISO 4217, e.g. EUR. Ask \"what currency do you price in?\" — it is an ordinary business question, and every generated price is denominated in it. Do not infer it from their language or country.\nIt must be a currency the shop can be PAID in. A currency the euro replaced is refused with EUR named in its place — BGN, HRK, the earlier accessions, and the microstate codes ADP, MCF, SML and VAL — because card processors no longer accept them. Convert the prices as well as the code: every price is read as being in the currency submitted, so relabelling alone reprices the whole shop. Submitting one anyway is refused with 422, which is the cheap place to find out: past this point the currency reaches the generated catalogue and every price in a running shop, and the failure becomes a refused card at the owner's first sale."
      },
      "country": {
       "type": "string",
@@ -161,15 +91,6 @@
        "$ref": "#/$defs/ProductHint"
       }
      },
-     "mode": {
-      "type": "string",
-      "enum": [
-       "shop",
-       "site"
-      ],
-      "default": "shop",
-      "description": "`shop` (the default): an online shop. `site`: a website with no shop at all, for a business that wants to be found and reached rather than to sell online: a homepage, About, Services and a contact page, a blog, legal pages. No products, cart, checkout, prices, payments, shipping or VAT. Ask which one the customer wants when it is not clear.\nFor a site, leave out `currency`, `vatRate`, `pricesIncludeVat`, `cashOnDelivery`, `productHints` and `importFrom`, and send `contact` with at least an `email` or a `phone`: the contact page shows them."
-     },
      "template": {
       "type": "string",
       "enum": [
@@ -177,11 +98,9 @@
        "ceramics",
        "jewelry",
        "knitwear",
-       "services",
-       "business",
-       "restaurant"
+       "services"
       ],
-      "description": "A complete sample shop to start from, which the merchant then replaces: 20-40 sample products marked as samples, categories, a homepage and an info page, in English and Bulgarian. The shop's own name, contact details, currency and VAT still come from this request.\n`candles`: candles and soaps. `ceramics`: ceramics and pottery. `jewelry`: jewelry. `knitwear`: clothing and knitwear. `services`: services by the hour or week, and workshops.\nOffer one when the merchant has no products to list yet, so the shop opens looking like a shop rather than empty. Mutually exclusive with `importFrom` and with a non-empty `productHints`. The claim page lets the merchant change or drop it.\nFor a site (`mode: site`) only the two site templates: `business` (a business card: who we are, services, contact) and `restaurant` (menu, hours, location). They carry pages and a homepage, no products. The shop templates are for a shop only."
+      "description": "A complete sample shop to start from, which the merchant then replaces: 20-40 sample products marked as samples, categories, a homepage and an info page, in English and Bulgarian. The shop's own name, contact details, currency and VAT still come from this request.\n`candles`: candles and soaps. `ceramics`: ceramics and pottery. `jewelry`: jewelry. `knitwear`: clothing and knitwear. `services`: services by the hour or week, and workshops.\nOffer one when the merchant has no products to list yet, so the shop opens looking like a shop rather than empty. Mutually exclusive with `importFrom` and with a non-empty `productHints`. The claim page lets the merchant change or drop it."
      }
     },
     "$defs": {
@@ -485,14 +404,6 @@
        },
        "status": {
         "$ref": "#/$defs/RequestStatus"
-       },
-       "mode": {
-        "type": "string",
-        "enum": [
-         "shop",
-         "site"
-        ],
-        "description": "`shop` or `site` (#472). For a site, speak of a website: it has pages and a contact page, and no orders or payments to set up."
        },
        "step": {
         "type": "string",
