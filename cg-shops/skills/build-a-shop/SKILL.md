@@ -142,13 +142,24 @@ Each result starts with a status line such as `HTTP 201 Created`.
   2. The link works once and expires at `expiresAt` (give the date).
   3. The build takes a few minutes. Then they get an email "Your shop is
      ready" with the shop's address and a link to set their admin password.
-  4. In the admin they should next: add product photos, set up payments, set
-     the delivery price, and read the legal pages. Use the country guide for
-     what to say here.
-  5. They can ask you any time how the shop is doing.
-- **200 OK:** a replay of a draft made before. It has no claim link. If the
-  link is still in this chat, give it again. If not, say it cannot be
-  recovered, and call `create_shop` again once with a NEW key.
+  4. What to do next in the admin depends on what was drafted:
+     - **A shop:** add product photos, set up payments, set the delivery
+       price, and read the legal pages. Use the country guide for what to say
+       here.
+     - **A website** (`mode: site`): check the pages and the contact details,
+       add a logo, and read the legal pages. A website has no products,
+       payments or delivery, so do not mention them.
+  5. They can ask you any time how it is doing.
+- **200 OK:** a replay of a request made before, with the same key. It has no
+  claim link. Read its `status` first:
+  - `draft`: if the claim link is still in this chat, give it again. If not,
+    say it cannot be recovered, and call `create_shop` again once with a NEW
+    key.
+  - `claimed`, `building` or `ready`: the form was already sent, so this shop
+    exists. Do NOT draft a new one. Say so, and use `get_shop_status` with the
+    `requestId` to report how it is doing.
+  - `expired`: the old link ran out. Offer to draft it again with a NEW key.
+  - Anything else: report the status as the `check-my-shop` skill explains.
 - **409:** the key was already used for another shop. Make a new key and
   retry.
 - **422:** explain the message in plain words, ask only for what is wrong, and

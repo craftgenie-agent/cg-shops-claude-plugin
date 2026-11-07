@@ -22,7 +22,7 @@ source changes, change the skill and this file together.
 | Submit the server as an MCP connector too, and pair the two listings | CG Shop Builder connector (backend `plugin/CLAUDE-DIRECTORY.md`) | [Publish to the directory](https://claude.com/docs/directory/publish.md) |
 | Marketplace file for team testing | `.claude-plugin/marketplace.json`, source `./cg-shops` | [Create a marketplace](https://code.claude.com/docs/en/plugins/create-marketplace) |
 | Privacy policy link, support contact, accurate narrow descriptions, no promotional-only content, only the data the function needs | README links `https://manager.cgshops.com/privacy?lang=en`; support `info@craftgenie.ai`; no plan prices | [Software Directory Policy](https://support.claude.com/en/articles/13145358-anthropic-software-directory-policy) |
-| Evals: `evals/<case>/prompt.md` + `graders/`, MCP mocks in `evals/mocks/<server>/` | 9 cases, mocks of both tools with the real `tools/list` in `_tools.json` | [Plugin evals](https://code.claude.com/docs/en/plugin-evals) |
+| Evals: `evals/<case>/prompt.md` + `graders/`, MCP mocks in `evals/mocks/<server>/` | 10 cases, mocks of both tools with the real `tools/list` in `_tools.json` | [Plugin evals](https://code.claude.com/docs/en/plugin-evals) |
 
 ## What the connector does
 

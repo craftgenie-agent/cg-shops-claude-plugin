@@ -63,7 +63,7 @@ know first. The shop's built-in texts and emails will be in English. The
 built-in couriers only work in Bulgaria for now, so you would ship with your
 own carrier and set your delivery price in the admin. Shall I go ahead?"
 
-## Next steps to tell the merchant
+## Next steps to tell the merchant (a shop)
 
 After the shop is ready:
 

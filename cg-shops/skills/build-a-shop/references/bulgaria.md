@@ -75,7 +75,7 @@ The shop can move from `<shop>.cgshops.com` to the merchant's own domain, such
 as `www.magazin.bg`, with one DNS record. For a `.bg` domain the nameservers
 are changed at the registrar or at Register.BG.
 
-## Next steps to tell a Bulgarian merchant
+## Next steps to tell a Bulgarian merchant (a shop)
 
 After the shop is ready:
 
