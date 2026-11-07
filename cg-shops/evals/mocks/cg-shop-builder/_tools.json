@@ -1,0 +1,467 @@
+{
+ "tools": [
+  {
+   "name": "create_shop",
+   "title": "Create a new shop",
+   "description": "Draft a brand-new shop from what the customer describes: what they sell, the shop's name, its currency and country, and any products they name. Returns a claimUrl for the customer to finish on CG Shops' own site -- nothing is built until they submit it there. When the person names or approves products, send them as productHints and no template; use a template (candles, ceramics, jewelry, knitwear, services) only when they want a sample catalogue with no products of their own: a complete sample shop they replace later.",
+   "inputSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "idempotencyKey",
+     "brief",
+     "shopName",
+     "country",
+     "currency"
+    ],
+    "description": "What the agent learned in conversation. Commercial facts only — no personal data. Everything here is confirmable by the customer on the claim page, so prefer submitting your best understanding over interrogating them.",
+    "properties": {
+     "idempotencyKey": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,120}$",
+      "description": "A key you make up once per new shop and REUSE on every retry of that shop; a new one for every other shop. It stops one slow call becoming two shops.\n8 to 120 characters: letters, digits, `.`, `_`, `:` or `-`. Make it up yourself from the shop's name, today's date and 6 random letters or digits, for example `rila-candle-studio-20261018-k7q2x9`, so two conversations never pick the same key. A UUID works too; never run code or a command to make one.\nThe key is bound to the body you first sent with it. Reusing it for a DIFFERENT shop is refused with 409 rather than served, because answering would hand the second customer a claim link belonging to the first."
+     },
+     "brief": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 8000,
+      "pattern": "\\S",
+      "description": "What the customer said, in their own words: what they sell, to whom, roughly what the catalogue looks like. The only field you compose rather than collect."
+     },
+     "shopName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 120,
+      "pattern": "\\S",
+      "description": "Display name of the shop, e.g. \"Aspar Software\"."
+     },
+     "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217, e.g. EUR. Ask \"what currency do you price in?\" — it is an ordinary business question, and every generated price is denominated in it. Do not infer it from their language or country.\nIt must be a currency the shop can be PAID in. A currency the euro replaced is refused with EUR named in its place — BGN, HRK, the earlier accessions, and the microstate codes ADP, MCF, SML and VAL — because card processors no longer accept them. Convert the prices as well as the code: every price is read as being in the currency submitted, so relabelling alone reprices the whole shop. Submitting one anyway is refused with 422, which is the cheap place to find out: past this point the currency reaches the generated catalogue and every price in a running shop, and the failure becomes a refused card at the owner's first sale."
+     },
+     "country": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166-1 alpha-2 of where the business operates, e.g. BG. Drives the store address, the tax regime and the shipping zone."
+     },
+     "vatRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 0.01,
+      "description": "VAT percentage to two decimal places, e.g. 20 or 8.25. More precision is refused rather than rounded: this number is a legal fact and silently changing it is worse than rejecting it. Send it only if the customer stated it; never guess. Omitted, the claim page asks — a wrong rate misprices the catalogue and is a legal problem, not a cosmetic one."
+     },
+     "pricesIncludeVat": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether prices in the brief are what a shopper pays (gross) or net. Backwards, the whole catalogue is wrong by the VAT rate."
+     },
+     "cashOnDelivery": {
+      "type": "boolean",
+      "description": "Whether the shop takes cash on delivery. The only payment method that needs nothing from the merchant, and therefore the only one a shop can be handed over already able to take an order: bank transfer needs their IBAN and cards need credentials, both set up later in the shop's admin. So a shop that says nothing here is live, browsable and unable to sell. It pays only for goods that ship: a cart of services or downloads alone cannot be paid on delivery.\nOmitted is not `false`. It means nobody was asked, the claim page will still ask, and the shop is left on the platform default of off — the merchant ships before the money arrives, and that risk is theirs to accept rather than ours to assume."
+     },
+     "timezone": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "IANA name, e.g. Europe/Sofia. Defaults from `country`."
+     },
+     "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$",
+      "description": "Primary storefront language. Defaults from `country`."
+     },
+     "requestedSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 40,
+      "description": "Preferred subdomain, e.g. \"aspar-software\". Derived from `shopName` when omitted, and confirmed on the claim page where availability can actually be shown."
+     },
+     "legal": {
+      "$ref": "#/$defs/Legal"
+     },
+     "contact": {
+      "$ref": "#/$defs/Contact"
+     },
+     "productHints": {
+      "type": "array",
+      "maxItems": 200,
+      "description": "The products for the shop. Each needs only a name and a price; everything else is optional, so a catalogue can start from very little.\nEVERY product the customer mentions belongs here. \"Hours, and bundles of 1, 2, 4, 8 and 12 weeks\" is six products. A price you were not given is a reason to ask one question or to propose one and flag it — never a reason to leave the product out, which builds a shop missing most of its catalogue.\nOnes the customer named are treated as fact. Ones YOU drafted for them, and prices you chose for products they named, carry `suggested: true` — which is what lets the claim page show the owner what was proposed on their behalf.",
+      "items": {
+       "$ref": "#/$defs/ProductHint"
+      }
+     },
+     "template": {
+      "type": "string",
+      "enum": [
+       "candles",
+       "ceramics",
+       "jewelry",
+       "knitwear",
+       "services"
+      ],
+      "description": "A complete sample shop to start from, which the merchant then replaces: 20-40 sample products marked as samples, categories, a homepage and an info page, in English and Bulgarian. The shop's own name, contact details, currency and VAT still come from this request.\n`candles`: candles and soaps. `ceramics`: ceramics and pottery. `jewelry`: jewelry. `knitwear`: clothing and knitwear. `services`: services by the hour or week, and workshops.\nOffer one when the merchant has no products to list yet, so the shop opens looking like a shop rather than empty. Mutually exclusive with `importFrom` and with a non-empty `productHints`. The claim page lets the merchant change or drop it."
+     }
+    },
+    "$defs": {
+     "ProductHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "name",
+       "price"
+      ],
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200,
+        "pattern": "\\S"
+       },
+       "price": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 9999999999.99,
+        "multipleOf": 0.01,
+        "description": "In the shop's `currency`, to two decimal places. More precision is refused rather than rounded, so a price is never quietly not the one the customer named."
+       },
+       "sku": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "Generated from the name when omitted. Must be unique."
+       },
+       "category": {
+        "type": "string",
+        "maxLength": 120
+       },
+       "description": {
+        "type": "string",
+        "maxLength": 4000
+       },
+       "physical": {
+        "type": "boolean",
+        "default": true,
+        "description": "False for services and downloads, which need no shipping."
+       },
+       "suggested": {
+        "type": "boolean",
+        "default": false,
+        "description": "True when YOU drafted this product rather than the customer naming it. Absent means they named it.\nSend drafts when the customer asks you to — \"three kinds of tile, you pick\" — and SHOW THEM IN THE CONVERSATION FIRST. That is the only place they can be changed cheaply: a draft they correct there costs a sentence, and one they notice later is edited or deleted in the shop's own admin.\nThey are built like any other product. The claim page marks them as suggestions rather than as things the customer said, so the owner can see what was proposed on their behalf — but it does not ask them to approve each one, and nothing waits for that.\nWrong in the safe direction it understates what you invented; wrong the other way it puts words in somebody's mouth, and they are never asked about it."
+       }
+      }
+     },
+     "Contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The shop's PUBLIC contact details, printed on the storefront for shoppers to use.\n`contact.email` is NOT the owner's account and must never be used as one: it is a business address meant for publication, like the phone number beside it, and a shop's \"hello@\" is frequently not a person at all. The owner's own address is collected on the claim page and never travels through this API.\nSend only what the customer explicitly offered for publication. If they did not raise it, omit the field rather than asking — a request for an email address is the thing this flow exists to avoid.",
+      "properties": {
+       "email": {
+        "type": "string",
+        "format": "email",
+        "minLength": 1,
+        "maxLength": 320
+       },
+       "phone": {
+        "type": "string",
+        "maxLength": 64
+       },
+       "address": {
+        "type": "string",
+        "maxLength": 500
+       },
+       "city": {
+        "type": "string",
+        "maxLength": 120
+       },
+       "province": {
+        "type": "string",
+        "maxLength": 120
+       },
+       "postalCode": {
+        "type": "string",
+        "maxLength": 32
+       }
+      }
+     },
+     "Legal": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The business, not the person. Printed on the shop's legal pages and on the documents it gives its own customers; absent, the shop still sells.",
+      "properties": {
+       "companyName": {
+        "type": "string",
+        "maxLength": 200
+       },
+       "vatId": {
+        "type": "string",
+        "maxLength": 32,
+        "description": "e.g. BG204145835"
+       },
+       "legalRepresentative": {
+        "type": "string",
+        "maxLength": 200
+       }
+      }
+     }
+    }
+   },
+   "outputSchema": {
+    "type": "object",
+    "anyOf": [
+     {
+      "$ref": "#/$defs/ShopRequestCreated"
+     },
+     {
+      "$ref": "#/$defs/ShopRequestReplay"
+     },
+     {
+      "$ref": "#/$defs/Problem"
+     }
+    ],
+    "$defs": {
+     "Problem": {
+      "type": "object",
+      "description": "The body of every refusal here (RFC 9457, as Spring writes it): read `detail` to the customer in plain words. In the plugin it is also the structured content of a tool's error result.",
+      "required": [
+       "title",
+       "status"
+      ],
+      "properties": {
+       "type": {
+        "type": "string"
+       },
+       "title": {
+        "type": "string"
+       },
+       "status": {
+        "type": "integer",
+        "minimum": 400,
+        "maximum": 599
+       },
+       "detail": {
+        "type": "string"
+       },
+       "instance": {
+        "type": "string"
+       }
+      }
+     },
+     "ShopRequestReplay": {
+      "type": "object",
+      "description": "A replay names the request and nothing more. Deliberately not `ShopRequestCreated`: repeating a claim link is how one customer's credential reaches another.",
+      "required": [
+       "requestId",
+       "status",
+       "expiresAt"
+      ],
+      "properties": {
+       "requestId": {
+        "type": "string",
+        "format": "uuid"
+       },
+       "status": {
+        "$ref": "#/$defs/RequestStatus"
+       },
+       "expiresAt": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "shopNamePreview": {
+        "type": "string"
+       }
+      }
+     },
+     "RequestStatus": {
+      "type": "string",
+      "enum": [
+       "draft",
+       "claimed",
+       "building",
+       "ready",
+       "failed",
+       "expired",
+       "suspended",
+       "removed"
+      ],
+      "description": "`draft` — waiting for the customer to SUBMIT the claim form. Opening the link is not enough and does not change this: the page asks for their name, their email and the terms, and the build starts when they send it. So `draft` after a while means the form is still unsent, not that the link went unread — telling somebody to open a page they are already looking at is the one unhelpful thing to say here. Nothing is being built; this is also the normal state right after you call. `claimed` — they identified themselves and the build is queued. `building` — provisioning. Minutes, mostly DNS and certificates. `ready` — the shop is live; the owner has been emailed a way in. `failed` — see `error`. `expired` — the form was never submitted in time. Submit a new request. `suspended` — the shop was BUILT and its storefront is closed. Not a failure and not a build still running: everything in the shop is intact and the owner still has their admin. Say the storefront is closed for now and that the owner can see why in the email CG Shops sent them, or ask CG Shops support. Do not guess the reason, and do not call it a failure: a customer told their shop failed goes looking for a bug that is not there. `removed` — an operator removed the shop and it is not coming back. Its container, its assistants, the images its owner uploaded and its database are being destroyed, and everything the manager held about the person goes with them; the row is kept empty as the record that the shop existed and was taken away deliberately. The status is set when the removal is DECIDED, not when the last of it finishes — the final clearing waits out anything that might still be mid-build, and a teardown that fails is retried — so say the shop has been removed and that its data is being erased, and never confirm from this status alone that the erasure is already complete. Not a failure and not a state anything recovers from: there is nothing left to rebuild, and once the row is empty there is no address to write to either."
+     },
+     "ShopRequestCreated": {
+      "type": "object",
+      "required": [
+       "requestId",
+       "claimUrl",
+       "status",
+       "expiresAt"
+      ],
+      "properties": {
+       "requestId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Safe to log and to quote back to the customer."
+       },
+       "claimUrl": {
+        "type": "string",
+        "format": "uri",
+        "description": "GIVE THIS TO THE CUSTOMER. It carries a secret that is not the requestId, so pass it on whole and unaltered. It expires, and stops working once the shop is claimed.",
+        "example": "https://craftgenie.../claim/8f3c...9a2b"
+       },
+       "status": {
+        "$ref": "#/$defs/RequestStatus"
+       },
+       "expiresAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Unclaimed requests are discarded. Tell the customer the link does not wait forever."
+       },
+       "shopNamePreview": {
+        "type": "string",
+        "description": "What the shop will be called, for you to confirm in chat."
+       }
+      }
+     }
+    }
+   },
+   "annotations": {
+    "title": "Create a new shop",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "_meta": {
+    "securitySchemes": [
+     {
+      "type": "noauth"
+     }
+    ]
+   }
+  },
+  {
+   "name": "get_shop_status",
+   "title": "Check my shop",
+   "description": "Reports how a shop requested with create_shop is doing: whether the claim form was submitted, the build's progress, and the shop's address once it is ready. Needs the requestId that create_shop returned. Changes nothing. Use this only if the customer asks how their shop is doing; they see the same on the claim page, which updates as the build runs.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "requestId": {
+      "type": "string",
+      "format": "uuid"
+     }
+    },
+    "required": [
+     "requestId"
+    ],
+    "additionalProperties": false
+   },
+   "outputSchema": {
+    "type": "object",
+    "anyOf": [
+     {
+      "$ref": "#/$defs/ShopRequestState"
+     },
+     {
+      "$ref": "#/$defs/Problem"
+     }
+    ],
+    "$defs": {
+     "Problem": {
+      "type": "object",
+      "description": "The body of every refusal here (RFC 9457, as Spring writes it): read `detail` to the customer in plain words. In the plugin it is also the structured content of a tool's error result.",
+      "required": [
+       "title",
+       "status"
+      ],
+      "properties": {
+       "type": {
+        "type": "string"
+       },
+       "title": {
+        "type": "string"
+       },
+       "status": {
+        "type": "integer",
+        "minimum": 400,
+        "maximum": 599
+       },
+       "detail": {
+        "type": "string"
+       },
+       "instance": {
+        "type": "string"
+       }
+      }
+     },
+     "ShopRequestState": {
+      "type": "object",
+      "required": [
+       "requestId",
+       "status"
+      ],
+      "properties": {
+       "requestId": {
+        "type": "string",
+        "format": "uuid"
+       },
+       "status": {
+        "$ref": "#/$defs/RequestStatus"
+       },
+       "step": {
+        "type": "string",
+        "description": "Plain-language current step, safe to read aloud."
+       },
+       "storefrontUrl": {
+        "type": "string",
+        "format": "uri",
+        "description": "Present once `ready`."
+       },
+       "adminUrl": {
+        "type": "string",
+        "format": "uri",
+        "description": "Present once `ready`. The password is NOT here — the owner sets it from a one-time link emailed to them."
+       },
+       "needsAttention": {
+        "type": "array",
+        "description": "Things a human must still finish, such as payment credentials. Present for any BUILT shop, which includes a suspended one — so read `status` before saying anything about the storefront. When `ready`, the shop is live and browsable without these and simply cannot take money. When `suspended`, it is built and intact, its storefront is closed, and these are still outstanding on top of that. Do not give a reason for the suspension here: see `status` for why that is not something to assume.",
+        "items": {
+         "type": "string"
+        }
+       },
+       "error": {
+        "type": "string",
+        "description": "Present when `failed`; safe to relay to the customer."
+       }
+      }
+     },
+     "RequestStatus": {
+      "type": "string",
+      "enum": [
+       "draft",
+       "claimed",
+       "building",
+       "ready",
+       "failed",
+       "expired",
+       "suspended",
+       "removed"
+      ],
+      "description": "`draft` — waiting for the customer to SUBMIT the claim form. Opening the link is not enough and does not change this: the page asks for their name, their email and the terms, and the build starts when they send it. So `draft` after a while means the form is still unsent, not that the link went unread — telling somebody to open a page they are already looking at is the one unhelpful thing to say here. Nothing is being built; this is also the normal state right after you call. `claimed` — they identified themselves and the build is queued. `building` — provisioning. Minutes, mostly DNS and certificates. `ready` — the shop is live; the owner has been emailed a way in. `failed` — see `error`. `expired` — the form was never submitted in time. Submit a new request. `suspended` — the shop was BUILT and its storefront is closed. Not a failure and not a build still running: everything in the shop is intact and the owner still has their admin. Say the storefront is closed for now and that the owner can see why in the email CG Shops sent them, or ask CG Shops support. Do not guess the reason, and do not call it a failure: a customer told their shop failed goes looking for a bug that is not there. `removed` — an operator removed the shop and it is not coming back. Its container, its assistants, the images its owner uploaded and its database are being destroyed, and everything the manager held about the person goes with them; the row is kept empty as the record that the shop existed and was taken away deliberately. The status is set when the removal is DECIDED, not when the last of it finishes — the final clearing waits out anything that might still be mid-build, and a teardown that fails is retried — so say the shop has been removed and that its data is being erased, and never confirm from this status alone that the erasure is already complete. Not a failure and not a state anything recovers from: there is nothing left to rebuild, and once the row is empty there is no address to write to either."
+     }
+    }
+   },
+   "annotations": {
+    "title": "Check my shop",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "_meta": {
+    "securitySchemes": [
+     {
+      "type": "noauth"
+     }
+    ]
+   }
+  }
+ ]
+}
