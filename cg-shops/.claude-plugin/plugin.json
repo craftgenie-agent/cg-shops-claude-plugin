@@ -9,7 +9,16 @@
     "url": "https://www.cgshops.com"
   },
   "homepage": "https://www.cgshops.com/en",
+  "privacyPolicyUrl": "https://manager.cgshops.com/privacy?lang=en",
   "repository": "https://github.com/craftgenie-agent/cg-shops-claude-plugin",
   "license": "MIT",
-  "keywords": ["online shop", "e-commerce", "web shop", "store builder", "shop builder", "small business"]
+  "keywords": [
+    "online shop",
+    "e-commerce",
+    "web shop",
+    "store builder",
+    "shop builder",
+    "small business"
+  ],
+  "icon": ".claude-plugin/icon.png"
 }
