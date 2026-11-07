@@ -1,0 +1,15 @@
+{
+  "name": "cg-shops",
+  "displayName": "CG Shops",
+  "version": "1.0.0",
+  "description": "Build an online shop or a simple business website on CG Shops by talking with Claude, in any country. Claude asks a few short questions, drafts the shop and gives you a link to check and claim it. Later it can tell you how the build is going.",
+  "author": {
+    "name": "Aspar Software",
+    "email": "info@craftgenie.ai",
+    "url": "https://www.cgshops.com"
+  },
+  "homepage": "https://www.cgshops.com/en",
+  "repository": "https://github.com/craftgenie-agent/cg-shops-claude-plugin",
+  "license": "MIT",
+  "keywords": ["online shop", "e-commerce", "web shop", "store builder", "website builder", "small business"]
+}

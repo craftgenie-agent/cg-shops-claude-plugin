@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cg-shop-builder": {
+      "type": "http",
+      "url": "https://manager.cgshops.com/api/v1/mcp"
+    }
+  }
+}
