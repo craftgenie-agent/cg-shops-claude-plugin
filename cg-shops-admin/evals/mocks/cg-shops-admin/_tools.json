@@ -416,6 +416,264 @@
    "execution": {
     "taskSupport": "forbidden"
    }
+  },
+  {
+   "name": "change_price",
+   "title": "Change price",
+   "description": "Set one product's price. Call it first without confirmation_token: it shows the product, the price now and the new price, and changes nothing. Only after the merchant says yes, call again with the same arguments plus the confirmation_token from that preview. Recorded in the shop's AI change log; undo_last_change can put the old price back.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "sku": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact SKU, from search_products."
+     },
+     "price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "The new price, in the shop's currency."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "sku",
+     "price"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Change price",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "adjust_inventory",
+   "title": "Set stock level",
+   "description": "Set a product's stock to an absolute quantity: pass the resulting count, not the difference. Call it first without confirmation_token to show the stock now and after; call again with the token only after the merchant says yes. Recorded in the shop's AI change log; undo_last_change can put the old stock back.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "sku": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact SKU, from search_products."
+     },
+     "qty": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The resulting stock level."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "sku",
+     "qty"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Set stock level",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "create_shipment",
+   "title": "Ship order",
+   "description": "Mark an order as shipped, with a carrier and an optional tracking number. Ships everything still outstanding on the order. Call it first without confirmation_token to show the order; call again with the token only after the merchant says yes. A shipment cannot be undone here.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From search_orders."
+     },
+     "carrier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Carrier code the shop has configured, e.g. \"custom\"."
+     },
+     "tracking_number": {
+      "type": "string"
+     },
+     "notify_customer": {
+      "type": "boolean",
+      "description": "Whether the shop emails the customer. Default is the shop's."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "order_id",
+     "carrier"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Ship order",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "mark_delivered",
+   "title": "Mark order delivered",
+   "description": "Record that an order arrived: marks every open shipment on it delivered. Call it first without confirmation_token to show the order; call again with the token only after the merchant says yes. A delivery cannot be undone here.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From search_orders."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "order_id"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Mark order delivered",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "mark_order_paid",
+   "title": "Mark order paid",
+   "description": "Record that an order was paid outside the shop (cash on delivery, a bank transfer that landed, a card machine). It takes no payment and contacts no payment provider. Call it first without confirmation_token to show the order and its total; call again with the token only after the merchant says yes. A recorded payment cannot be undone here.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From search_orders."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "order_id"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Mark order paid",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "cancel_order",
+   "title": "Cancel order",
+   "description": "Cancel an order. Always call it first without confirmation_token: it returns the order, the customer and the amount for the merchant to check, and cancels nothing. Call again with the token only after the merchant says yes. A cancelled order cannot be reopened.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From search_orders."
+     },
+     "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why it is being cancelled. The shop records this and requires it."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "required": [
+     "order_id",
+     "reason"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Cancel order",
+    "readOnlyHint": false,
+    "destructiveHint": true,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "undo_last_change",
+   "title": "Undo the last change",
+   "description": "Put back what the assistant's most recent change in this shop replaced. Call again to go further back. Call it first without confirmation_token to show what will be written back; call again with the token only after the merchant says yes. If the last change cannot be undone (a payment, shipment, delivery or cancelled order), says why and changes nothing.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "overwrite_changed": {
+      "type": "boolean",
+      "description": "Put the old values back even where they were changed again since. Only after showing the merchant what they are now."
+     },
+     "confirmation_token": {
+      "type": "string",
+      "description": "Only for confirming a change this tool previewed. Call without it first; the preview returns the token to pass here."
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Undo the last change",
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
   }
  ]
 }

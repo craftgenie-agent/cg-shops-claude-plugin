@@ -94,7 +94,18 @@ Help = its `docs/merchant-help/en/` (and `bg/`).
   (`https://admin.cgshops.com/mcp`, sign-in picks the shop); its tools in
   `cg-shops-admin/evals/mocks/cg-shops-admin/_tools.json` are the 11 v1 read
   tools as the admin server lists them (craftgenie-evershop-mcp main,
-  2026-11-11, with `openWorldHint: false` from its ADR 0001). Refresh that file
-  from the live endpoint once it is on.
+  2026-11-11, with `openWorldHint: false` from its ADR 0001), plus the 7
+  phase 2 change tools (`change_price`, `adjust_inventory`,
+  `create_shipment`, `mark_delivered`, `mark_order_paid`, `cancel_order`,
+  `undo_last_change`) written from the phase 2 contract of issue
+  craftgenie-evershop-mcp#147: scope `shop.write`, a preview and a
+  `confirmation_token` on each (evershop-mcp `mcp-core` `server.ts` and
+  `results.ts`), `idempotentHint: false`, only `cancel_order` destructive.
+  Their schemas come from evershop-mcp `mcp-admin/src/tools/write.ts`,
+  `destructive.ts` and `changes.ts`; their descriptions are shortened so they
+  name no tool the plugin lacks. Which changes can be undone comes from
+  `mcp-admin/src/changeLog/reasons.ts` (price and stock yes; payment,
+  shipment, delivery and cancel no). Refresh the file from the live endpoint
+  once it is on.
 - **Commands**: nothing they add over the skills.
 - **CI**: there is no workflow yet; `scripts/check.sh` is the gate.

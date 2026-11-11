@@ -13,7 +13,7 @@ The plugin itself is the [`cg-shops/`](cg-shops/) folder. Its
 | `cg-shops/.mcp.json` | The CG Shops connector, `https://manager.cgshops.com/api/v1/mcp` |
 | `cg-shops/skills/` | `build-a-shop` (with country guides), `check-my-shop`, `connect-my-shop` |
 | `cg-shops/evals/` | Eval cases for `claude plugin eval`, with mocks of the two tools |
-| `cg-shops-admin/` | **Draft, not submitted:** "CG Shops Admin", a merchant runs their own shop by chat through `https://admin.cgshops.com/mcp` (off until the owner turns it on; design in craftgenie-evershop-mcp `docs/adr/0001-cg-shops-admin-plugin.md`). Read-only tools, skill `run-my-shop`, 8 eval cases. Not in the marketplace file yet |
+| `cg-shops-admin/` | **Draft, not submitted:** "CG Shops Admin", a merchant runs their own shop by chat through `https://admin.cgshops.com/mcp` (off until the owner turns it on; design in craftgenie-evershop-mcp `docs/adr/0001-cg-shops-admin-plugin.md`). 11 read tools and 7 change tools (each previewed, done only after the merchant's yes, undo where possible), skill `run-my-shop`, 13 eval cases. Not in the marketplace file yet |
 | `.claude-plugin/marketplace.json` | Lets a tester add this repository as a marketplace |
 | `scripts/check.sh` | The gate: validation and text rules, for both plugin folders |
 | `scripts/build-zip.sh` | The zip for **Customize > Plugins > Upload plugin** (`scripts/build-zip.sh HEAD cg-shops-admin` for the draft) |

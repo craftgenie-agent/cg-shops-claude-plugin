@@ -2,3 +2,6 @@ cg-shops/evals/results/
 cg-shops-admin/evals/results/
 dist/
 .DS_Store
+# claude plugin eval leaves a copy of a replayed history, named by session id
+cg-shops-admin/evals/*/*.jsonl
+!cg-shops-admin/evals/*/history.jsonl
