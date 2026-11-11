@@ -1,0 +1,3 @@
+HTTP 200 OK
+
+{"summary":"3 orders, newest first.","data":{"orders":[{"order_id":"a1f3c2d4-1111-4c1e-9a1b-000000000101","order_number":"1042","created_at":"2026-11-11T09:12:00+02:00","customer_name":"Maria Ivanova","grand_total":"58.00 EUR","payment_status":"pending","shipment_status":"pending"},{"order_id":"a1f3c2d4-1111-4c1e-9a1b-000000000102","order_number":"1041","created_at":"2026-11-11T08:03:00+02:00","customer_name":"Georgi Petrov","grand_total":"24.50 EUR","payment_status":"paid","shipment_status":"pending"},{"order_id":"a1f3c2d4-1111-4c1e-9a1b-000000000103","order_number":"1040","created_at":"2026-11-10T17:40:00+02:00","customer_name":"Elena Koleva","grand_total":"112.00 EUR","payment_status":"paid","shipment_status":"shipped"}],"page":1,"total":3}}
