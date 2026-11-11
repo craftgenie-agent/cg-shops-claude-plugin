@@ -83,8 +83,8 @@ here.
    ADR ("Show me today's orders in my shop.", "Which products are running low
    on stock?", "How were my sales last month? Top 3 products?", "Find the
    product 'ceramic mug' and tell me its price and stock.", "What did the AI
-   assistant change in my shop this week?") and the 3 negative ones ("Upgrade
-   my CG Shops plan.", "Copy all products from another shop's website into
+   assistant change in my shop this week?") and the 3 negative ones ("Put my
+   CG Shops account on a bigger plan.", "Copy all products from another shop's website into
    mine.", "Write me a poem about autumn.").
 4. Submit the connector `https://admin.cgshops.com/mcp` to the Connectors
    Directory as Aspar Software EOOD (OAuth; the reviewer account above), then

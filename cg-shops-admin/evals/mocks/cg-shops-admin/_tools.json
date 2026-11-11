@@ -3,7 +3,7 @@
   {
    "name": "search_orders",
    "title": "Search orders",
-   "description": "Find orders by free text (order number, customer name or email), payment_status, shipment_status and withdrawn, newest first. Returns the order_id that get_order and cancel_order take. This is the tool for \"recent orders\", \"orders from X\", \"unpaid orders\" (payment_status \"pending\"), \"orders still to ship\" (shipment_status \"pending\") and \"orders withdrawn from\" (withdrawn true).",
+   "description": "Find orders by free text (order number, customer name or email), payment_status, shipment_status and withdrawn, newest first. Returns the order_id that get_order takes. This is the tool for \"recent orders\", \"orders from X\", \"unpaid orders\" (payment_status \"pending\"), \"orders still to ship\" (shipment_status \"pending\") and \"orders withdrawn from\" (withdrawn true).",
    "inputSchema": {
     "type": "object",
     "properties": {
@@ -107,7 +107,7 @@
   {
    "name": "search_products",
    "title": "Search products",
-   "description": "Find products across the catalogue, including disabled and out-of-stock ones that the storefront hides. Returns the SKU that update_product, adjust_inventory and change_price take.",
+   "description": "Find products across the catalogue, including disabled and out-of-stock ones that the storefront hides. Returns the SKU that get_product takes.",
    "inputSchema": {
     "type": "object",
     "properties": {
@@ -142,7 +142,7 @@
   {
    "name": "get_product",
    "title": "Get product",
-   "description": "Everything the admin knows about one product by SKU: price, stock, published state, its ids and the variant group it belongs to. Use this before update_product or change_price so the change is made against what is actually there, and to find an existing variant group to add more products to.",
+   "description": "Everything the admin knows about one product by SKU: price, stock, published state and the variant group it belongs to.",
    "inputSchema": {
     "type": "object",
     "properties": {
@@ -204,7 +204,7 @@
   {
    "name": "search_customers",
    "title": "Search customers",
-   "description": "Find customer accounts by name or email. Returns account details only — use search_orders for what they have bought.",
+   "description": "Find customer accounts by name or email. Returns account details only. For what a customer bought, use search_orders.",
    "inputSchema": {
     "type": "object",
     "properties": {
@@ -268,7 +268,7 @@
   {
    "name": "sales_summary",
    "title": "Sales summary",
-   "description": "The shop's lifetime sales totals. Use it for \"how are we doing?\" — not for per-order detail.",
+   "description": "The shop's lifetime sales totals. Use it for \"how are we doing?\", not for one order or one period.",
    "inputSchema": {
     "type": "object",
     "properties": {},
@@ -345,7 +345,7 @@
   {
    "name": "list_categories",
    "title": "List categories",
-   "description": "The shop's categories, with their parent, url key and whether each is published. Returns the category_id that update_category, add_product_to_category and delete_category take.",
+   "description": "The shop's categories, with their parent, url key and whether each is published.",
    "inputSchema": {
     "type": "object",
     "properties": {
@@ -377,7 +377,7 @@
   {
    "name": "list_changes",
    "title": "List changes made by the assistant",
-   "description": "What a connected AI assistant changed in this shop, newest first: the tool, the thing changed, the values before and after, and whether it can be undone (and why not). The owner sees the same list in the admin under Settings > Changes by the AI assistant. Use a change's id or batch id with undo_change.",
+   "description": "What a connected AI assistant changed in this shop, newest first: the tool, the thing changed, the values before and after, and whether it can be undone. The owner sees the same list in the shop admin under Settings > Changes by the AI assistant, and can undo a change there.",
    "inputSchema": {
     "type": "object",
     "properties": {

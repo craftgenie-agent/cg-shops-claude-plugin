@@ -49,6 +49,15 @@ for entry in "cg-shops https://manager.cgshops.com/api/v1/mcp" "cg-shops-admin h
   done
 done
 
+# 9. CG Shops Admin says nothing about paying CG Shops, in any file it ships
+#    (the zip is the whole folder, evals too). The same words the ChatGPT
+#    draft's test refuses (evershop-mcp pluginPackage.test.ts), after the
+#    Shop Builder review of 1.1.5.
+admin_files=$(git ls-files cg-shops-admin | grep -v -E '/evals/results/|\.png$' || true)
+[ -n "$admin_files" ] || admin_files=$(find cg-shops-admin -path '*/evals/results' -prune -o -type f ! -name '*.png' -print)
+grep -n -i -E 'invoice|billing|subscription|free trial|upgrade|14-day|14 days|144|per year|a year|pricing' $admin_files \
+  && err "cg-shops-admin mentions paying CG Shops (no invoice, billing, subscription, trial, upgrade or pricing words)"
+
 # 8. Claude Code's own validation, when the CLI is here.
 if command -v claude >/dev/null; then
   for plugin in cg-shops cg-shops-admin; do

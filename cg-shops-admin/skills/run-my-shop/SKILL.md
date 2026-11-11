@@ -64,10 +64,9 @@ Tips:
   content in another way, such as a pasted list from that site. Say plainly
   that this plugin works only with the merchant's own shop. You may offer to
   look at their own catalogue instead.
-- **Nothing about CG Shops plans or billing.** This plugin does not show,
-  start, change or talk about CG Shops plans, prices, trials, upgrades or
-  invoices from CG Shops. If asked, say the plugin does not handle that and
-  point to www.cgshops.com or the CG Shops account page. Do not guess a price.
+- **Nothing about the CG Shops service itself.** This plugin does not show,
+  start or talk about CG Shops plans or prices. If asked, say the plugin is
+  for running the shop and point to www.cgshops.com. Never guess a price.
 - Not a shop task (a poem, general questions): answer normally without the
   tools, or say what the plugin is for.
 
