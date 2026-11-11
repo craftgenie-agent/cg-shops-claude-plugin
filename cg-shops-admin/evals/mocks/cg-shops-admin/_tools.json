@@ -1,0 +1,421 @@
+{
+ "tools": [
+  {
+   "name": "search_orders",
+   "title": "Search orders",
+   "description": "Find orders by free text (order number, customer name or email), payment_status, shipment_status and withdrawn, newest first. Returns the order_id that get_order and cancel_order take. This is the tool for \"recent orders\", \"orders from X\", \"unpaid orders\" (payment_status \"pending\"), \"orders still to ship\" (shipment_status \"pending\") and \"orders withdrawn from\" (withdrawn true).",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "keyword": {
+      "description": "Order number, customer name or email.",
+      "type": "string"
+     },
+     "payment_status": {
+      "description": "Unpaid is \"pending\". \"canceled\" is a payment voided with its order; the provider-prefixed codes are PayPal and Stripe card payments.",
+      "type": "string",
+      "enum": [
+       "pending",
+       "paid",
+       "canceled",
+       "partially_refunded",
+       "refunded",
+       "paypal_authorized",
+       "paypal_captured",
+       "paypal_pending",
+       "paypal_failed",
+       "paypal_refunded",
+       "paypal_partial_refunded",
+       "stripe_authorized",
+       "stripe_captured",
+       "stripe_failed",
+       "stripe_refunded",
+       "stripe_partial_refunded"
+      ]
+     },
+     "shipment_status": {
+      "description": "The order's shipments taken together: \"pending\" is nothing shipped yet.",
+      "type": "string",
+      "enum": [
+       "pending",
+       "partially_shipped",
+       "shipped",
+       "partially_delivered",
+       "delivered",
+       "partially_canceled",
+       "canceled"
+      ]
+     },
+     "withdrawn": {
+      "description": "Only the orders a customer withdrew from. Leave it out otherwise; there is no filter for \"not withdrawn\".",
+      "type": "boolean",
+      "const": true
+     },
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     },
+     "page": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Search orders",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "get_order",
+   "title": "Get order",
+   "description": "Everything about one order: line items, totals, addresses, payment and shipment status. order_id comes from search_orders.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "required": [
+     "order_id"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Get order",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "search_products",
+   "title": "Search products",
+   "description": "Find products across the catalogue, including disabled and out-of-stock ones that the storefront hides. Returns the SKU that update_product, adjust_inventory and change_price take.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "keyword": {
+      "type": "string"
+     },
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     },
+     "page": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Search products",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "get_product",
+   "title": "Get product",
+   "description": "Everything the admin knows about one product by SKU: price, stock, published state, its ids and the variant group it belongs to. Use this before update_product or change_price so the change is made against what is actually there, and to find an existing variant group to add more products to.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "sku": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact SKU."
+     }
+    },
+    "required": [
+     "sku"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Get product",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "low_stock_report",
+   "title": "Low stock report",
+   "description": "Products at or below a stock threshold, lowest first. Use it for \"what is running out?\".",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "below": {
+      "description": "Default 5.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Low stock report",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "search_customers",
+   "title": "Search customers",
+   "description": "Find customer accounts by name or email. Returns account details only — use search_orders for what they have bought.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "keyword": {
+      "type": "string"
+     },
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     },
+     "page": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Search customers",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "get_customer",
+   "title": "Get customer",
+   "description": "One customer with their saved addresses and whether their account is enabled. Takes the customer_id from search_customers. Never returns credentials.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "customer_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From search_customers."
+     }
+    },
+    "required": [
+     "customer_id"
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Get customer",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "sales_summary",
+   "title": "Sales summary",
+   "description": "The shop's lifetime sales totals. Use it for \"how are we doing?\" — not for per-order detail.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {},
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Sales summary",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "sales_report",
+   "title": "Sales report for a period",
+   "description": "Sales for a period in the shop's time zone: revenue, orders, average order and items sold, the change against the previous period, best and worst sellers by quantity and by revenue, products that sold nothing, and sales by category. Cancelled, fully refunded and test orders are left out (and counted separately). Use it for \"what sold best this week?\", \"how was last month?\", \"sales today vs yesterday\". For lifetime totals use sales_summary.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "period": {
+      "description": "Default this_week. Weeks start on Monday. A running period (today, this_week, this_month, this_year) is compared with the same stretch of the one before; last_7_days and last_30_days are whole days before today. custom needs from and to.",
+      "type": "string",
+      "enum": [
+       "today",
+       "yesterday",
+       "this_week",
+       "last_week",
+       "this_month",
+       "last_month",
+       "last_7_days",
+       "last_30_days",
+       "this_year",
+       "custom"
+      ]
+     },
+     "from": {
+      "description": "For custom: first day, YYYY-MM-DD, in the shop time zone.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+     },
+     "to": {
+      "description": "For custom: last day, included, YYYY-MM-DD.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+     },
+     "compare": {
+      "description": "Compare with the previous period. Default true.",
+      "type": "boolean"
+     },
+     "limit": {
+      "description": "How many best/worst sellers to list. Default 5.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "Sales report for a period",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "list_categories",
+   "title": "List categories",
+   "description": "The shop's categories, with their parent, url key and whether each is published. Returns the category_id that update_category, add_product_to_category and delete_category take.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     },
+     "page": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "List categories",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  },
+  {
+   "name": "list_changes",
+   "title": "List changes made by the assistant",
+   "description": "What a connected AI assistant changed in this shop, newest first: the tool, the thing changed, the values before and after, and whether it can be undone (and why not). The owner sees the same list in the admin under Settings > Changes by the AI assistant. Use a change's id or batch id with undo_change.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "from": {
+      "description": "ISO date or time, inclusive.",
+      "type": "string"
+     },
+     "to": {
+      "description": "ISO date or time, exclusive.",
+      "type": "string"
+     },
+     "tool": {
+      "description": "Only changes made by this tool.",
+      "type": "string"
+     },
+     "only_undoable": {
+      "description": "Only changes that can still be undone.",
+      "type": "boolean"
+     },
+     "limit": {
+      "description": "Default 20.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+     }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#"
+   },
+   "annotations": {
+    "title": "List changes made by the assistant",
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+   },
+   "execution": {
+    "taskSupport": "forbidden"
+   }
+  }
+ ]
+}

@@ -87,8 +87,14 @@ Help = its `docs/merchant-help/en/` (and `bg/`).
 - **Imports from Shopify or WooCommerce** and photos from web addresses: the
   production endpoint does not list them (backend `plugin/README.md`, since
   plugin 1.1.5).
-- **Bundling the shop's admin assistant**: each shop has its own URL and OAuth,
-  so it can't be a fixed `.mcp.json` entry. `connect-my-shop` explains how the
-  merchant adds it as a custom connector, as the help documents.
+- **Bundling the shop's admin assistant** in `cg-shops`: each shop has its own
+  URL and OAuth, so it can't be a fixed `.mcp.json` entry. `connect-my-shop`
+  explains how the merchant adds it as a custom connector, as the help
+  documents. The draft `cg-shops-admin` plugin is the fixed-URL answer
+  (`https://admin.cgshops.com/mcp`, sign-in picks the shop); its tools in
+  `cg-shops-admin/evals/mocks/cg-shops-admin/_tools.json` are the 11 v1 read
+  tools as the admin server lists them (craftgenie-evershop-mcp main,
+  2026-11-11, with `openWorldHint: false` from its ADR 0001). Refresh that file
+  from the live endpoint once it is on.
 - **Commands**: nothing they add over the skills.
 - **CI**: there is no workflow yet; `scripts/check.sh` is the gate.

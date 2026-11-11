@@ -1,0 +1,27 @@
+{
+  "name": "cg-shops-admin",
+  "displayName": "CG Shops Admin",
+  "version": "0.1.0",
+  "description": "Run your CG Shops shop by chat: orders, products, stock and sales. You sign in with your CG Shops account and choose your shop. Claude acts as you, with your own rights in the shop. This version only reads.",
+  "author": {
+    "name": "Aspar Software",
+    "email": "info@craftgenie.ai",
+    "url": "https://www.cgshops.com"
+  },
+  "homepage": "https://www.cgshops.com/en",
+  "privacyPolicyUrl": "https://manager.cgshops.com/privacy?lang=en",
+  "termsOfServiceUrl": "https://manager.cgshops.com/terms?lang=en",
+  "documentationUrl": "https://www.cgshops.com/en/claude-connector",
+  "supportUrl": "https://www.cgshops.com/en/contact",
+  "repository": "https://github.com/craftgenie-agent/cg-shops-claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "online shop",
+    "e-commerce",
+    "orders",
+    "inventory",
+    "sales report",
+    "small business"
+  ],
+  "icon": ".claude-plugin/icon.png"
+}

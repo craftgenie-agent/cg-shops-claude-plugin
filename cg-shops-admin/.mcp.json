@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cg-shops-admin": {
+      "type": "http",
+      "url": "https://admin.cgshops.com/mcp"
+    }
+  }
+}

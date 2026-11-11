@@ -66,3 +66,30 @@ Before: the CG Shop Builder connector submission (backend
 
 Every later release: raise `version` in `cg-shops/.claude-plugin/plugin.json`
 and merge to `main`; the directory scans the new commit.
+
+## 3. CG Shops Admin (`cg-shops-admin`): later, after the endpoint is on
+
+The draft plugin needs `https://admin.cgshops.com/mcp` switched on first
+(craftgenie-evershop-mcp ADR 0001, "Turning it on"). Until then, do nothing
+here.
+
+1. Refresh `cg-shops-admin/evals/mocks/cg-shops-admin/_tools.json` from the
+   live `tools/list` (agent PR), and run the evals.
+2. Add `cg-shops-admin` to `.claude-plugin/marketplace.json` (agent PR).
+3. Test: `scripts/build-zip.sh HEAD cg-shops-admin`, upload the zip, connect
+   `cg-shops-admin`, sign in with the demo shop's reviewer account (staff,
+   email and password, no two-factor), choose the demo shop, approve on the
+   shop's page. On the web and on the phone, try the 5 positive cases of the
+   ADR ("Show me today's orders in my shop.", "Which products are running low
+   on stock?", "How were my sales last month? Top 3 products?", "Find the
+   product 'ceramic mug' and tell me its price and stock.", "What did the AI
+   assistant change in my shop this week?") and the 3 negative ones ("Upgrade
+   my CG Shops plan.", "Copy all products from another shop's website into
+   mine.", "Write me a poem about autumn.").
+4. Submit the connector `https://admin.cgshops.com/mcp` to the Connectors
+   Directory as Aspar Software EOOD (OAuth; the reviewer account above), then
+   the plugin bundle as in section 2 with plugin path `cg-shops-admin`, and
+   pair the two listings.
+5. Data handling: it reads the merchant's own shop (orders, products, stock,
+   customers, sales); CG Shops keeps the connection (who, which shop, which
+   AI app, when) until it ends; no other services; not for people under 18.
