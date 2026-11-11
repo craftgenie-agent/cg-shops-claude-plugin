@@ -82,27 +82,43 @@ in step 1.
    is not exactly the 18 plugin tools or an annotation is off.
 2. Add `cg-shops-admin` to `.claude-plugin/marketplace.json`.
 
-### 3.2 The reviewer account (D5)
+### 3.2 The two reviewer accounts (D5)
 
-Reviewers use the **Svetlina Candles demo shop** (noindex, labelled
-"Демо магазин").
-Make the account once:
+Decided 2026-11-11 (D5, option a). Reviewers use the **Svetlina Candles
+demo shop** (noindex, labelled "Демо магазин"). They get two accounts, both
+**staff** (Служител) of that shop only:
 
-1. A CG Shops account for the reviewer: email and password, no two-factor,
-   a new address used for nothing else.
-2. Add it to the demo shop as **staff** (not owner), with the fewest rights
-   the shop allows. It is a member of no other shop.
-3. Connect once yourself with this account: sign in, choose Svetlina, and on
-   the shop's page allow **reading only** (leave "make changes" off). Check
-   that "Show me the latest orders" works and that a change is refused
-   politely.
-4. Keep the password in Secret Manager or Bitwarden. **Never put the
-   password in Git**, in an issue, a pull request or a chat. Type it only
-   into the submission form's test account field.
+| Account | In `ADMIN_MCP_READ_ONLY_ACCOUNTS` | "Make changes" | Cases (3.3) |
+|---|---|---|---|
+| 1. Read only | yes | not offered | 1 to 5, 8 to 10 |
+| 2. Write test | no | the reviewer ticks it | 6 and 7 only (price change and undo) |
 
-With this account the write cases (6 and 7 below) end at the polite refusal.
-You show the full preview, yes and undo flow in the video, with your own
-account on the demo shop and changes allowed.
+Make each account once:
+
+1. A CG Shops account: email and password, no two-factor, a new address
+   used for nothing else (the e2e inbox works, for example
+   `inbox+admin-plugin-review@e2e.cgshops.com` and
+   `inbox+admin-plugin-review-write@e2e.cgshops.com`).
+2. Invite it to the demo shop as **staff** (not owner), in "Екип". It is a
+   member of no other shop. Two accounts need two free places in the team.
+3. Put **only account 1** in the manager setting
+   `ADMIN_MCP_READ_ONLY_ACCOUNTS` (deploy repo). The manager then never
+   lets account 1 make changes. Account 2 must not be on that list.
+4. Connect once yourself with each account: sign in, choose Svetlina.
+   Account 1: "make changes" is not offered; "Show me the latest orders"
+   works and a change is refused politely. Account 2: tick "make changes",
+   run cases 6 and 7, and check the price is back.
+5. Keep the passwords in Secret Manager or Bitwarden. **Never put a
+   password in Git**, in an issue, a pull request or a chat. Type them only
+   into the submission form's test account fields.
+
+Changes happen only on made-up demo products, each asks for a "yes" first,
+and each can be undone.
+
+After the review: in the shop's admin, **Settings > Changes by the AI
+assistant**, undo every change made by account 2 (ask "Undo that." or set
+the old value by hand). Check the demo products still have their old
+prices. Keep both accounts for the next review.
 
 ### 3.3 Test cases (web and mobile)
 
@@ -118,8 +134,8 @@ Positive:
 | 3 | "How were my sales last month? What were my top 3 products?" | `sales_report` with last month; revenue, orders, top 3 |
 | 4 | "Find the product 'candle' and tell me its price and stock." (use a product the demo shop has) | `search_products`, then `get_product`; price and stock |
 | 5 | "What has the AI assistant changed in my shop lately?" | `list_changes`; each change with its date |
-| 6 | "Change the price of <a demo product> to <new price>." Then "Yes." | `change_price` without a token: the product, the price now and the new price, and a yes or no question. Nothing changes before the yes. After "Yes": `change_price` again with the token; the new price and how to undo it. Read-only account: a polite note that this connection can only read |
-| 7 | "Undo that." Then "Yes." | `undo_last_change` preview: the price it puts back. After "Yes": the old price is back. Read-only account: the same polite note |
+| 6 | "Change the price of <a demo product> to <new price>." Then "Yes." | `change_price` without a token: the product, the price now and the new price, and a yes or no question. Nothing changes before the yes. After "Yes": `change_price` again with the token; the new price and how to undo it. Run with account 2 (write test). With account 1: a polite note that this connection can only read |
+| 7 | "Undo that." Then "Yes." | `undo_last_change` preview: the price it puts back. After "Yes": the old price is back. Run with account 2. With account 1: the same polite note |
 
 Negative (no shop tool is called):
 
@@ -135,7 +151,8 @@ still gets a preview).
 
 ### 3.4 Video script (web and mobile, about 3 minutes)
 
-Record on the demo shop with your own account and changes allowed. No real
+Record on the demo shop with account 2 (write test) and changes allowed,
+and undo the changes afterwards. No real
 customer data on screen.
 
 1. **Web, connect (30 s).** claude.ai, the plugin's **Connectors** tab,
@@ -188,10 +205,15 @@ Submit as **Aspar Software EOOD**. You submit; an agent never does.
 - [ ] Tool annotations: every tool has `readOnlyHint`, `destructiveHint`,
       `idempotentHint` and `openWorldHint` (false). The 11 read tools are
       read only; of the 7 change tools only `cancel_order` is destructive.
-- [ ] Reviewer account (3.2): email in the form, password from Secret
-      Manager or Bitwarden typed into the form only. Note for the reviewer:
-      "Read only. The write cases end with a note that the connection can
-      only read; the video shows them with changes allowed."
+- [ ] Both reviewer accounts (3.2): emails in the form, passwords from
+      Secret Manager or Bitwarden typed into the form only. Note for the
+      reviewer: "Two test accounts on our demo shop, which has made-up
+      products. Account 1 can only read: use it for every case except 6
+      and 7. Account 2 may make changes: use it only for cases 6 and 7, and
+      tick 'make changes' when you connect. Every change asks you to
+      confirm first and can be undone. We undo any change after the
+      review."
+- [ ] After the review: undo the changes (3.2).
 - [ ] Test cases: the 10 prompts of 3.3 with what to expect.
 - [ ] Video: recorded from 3.4, web and phone, uploaded where the form asks.
 - [ ] Listing text and links from 3.5. Logo: `cg-shops-admin/.claude-plugin/icon.png`.
