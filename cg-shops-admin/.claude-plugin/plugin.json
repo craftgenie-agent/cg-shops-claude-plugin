@@ -1,8 +1,8 @@
 {
   "name": "cg-shops-admin",
   "displayName": "CG Shops Admin",
-  "version": "0.1.0",
-  "description": "Run your CG Shops shop by chat: orders, products, stock and sales. You sign in with your CG Shops account and choose your shop. Claude acts as you, with your own rights in the shop. This version only reads.",
+  "version": "0.2.0",
+  "description": "Run your CG Shops shop by chat: orders, products, stock and sales. You sign in with your CG Shops account and choose your shop. Claude acts as you, with your own rights in the shop. It can also change a price or stock and update an order, always after showing the change and getting your yes.",
   "author": {
     "name": "Aspar Software",
     "email": "info@craftgenie.ai",
