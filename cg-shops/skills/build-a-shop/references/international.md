@@ -39,7 +39,8 @@ Say these plainly when they matter to the merchant:
   **English or Bulgarian** only. A shop for German, French, Spanish or any
   other language is built in English today. The merchant can rewrite their own
   product texts and pages in the admin in any language, but the shop's built-in
-  words (buttons, emails, legal pages) stay English.
+  words (buttons, emails, legal pages) stay English. One exception is
+  **Bengali**, below.
 - **Couriers:** the built-in courier integrations (Econt, Speedy, BOX NOW,
   Pigeon Express) deliver in Bulgaria only. Elsewhere the merchant ships with
   their own carrier and charges with the "Standard delivery" rate.
@@ -53,6 +54,24 @@ Say these plainly when they matter to the merchant:
 - **EU sales to other EU countries:** if their sales to consumers in other EU
   countries pass the EU threshold, VAT is due at the buyer's rate. The shop
   does not do this by itself: tell them to ask their accountant.
+
+## Bengali, for shops in Bangladesh
+
+A shop in English can have **Bengali as a second storefront language**
+(`language: en`, `languages: ["bn"]`, only if `create_shop` has the
+`languages` field). Shoppers switch language on the shop.
+
+- In Bengali, shoppers see the shop's buttons, cart and checkout in Bengali,
+  and get their emails (such as the order confirmation) in Bengali.
+- The merchant writes product names and descriptions in both languages, in
+  the admin.
+- The legal pages and the generated home page texts stay in English. A shop in
+  Bengali only is not possible: English stays the main language.
+- Prices in BDT show the taka sign, with Latin digits: `৳1,234.50` on English
+  pages, `1,234.50৳` on Bengali ones.
+- In Bangladesh there are no connected couriers and no local payment methods
+  (such as mobile wallets) yet. Cash on delivery works: the merchant delivers
+  and collects the money.
 
 ## How to say it
 

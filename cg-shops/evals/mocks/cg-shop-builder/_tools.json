@@ -71,6 +71,20 @@
       "pattern": "^[a-z]{2}$",
       "description": "Primary storefront language. Defaults from `country`."
      },
+     "languages": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "description": "Extra storefront languages beside `language`, only when the customer asks for them; the shop then offers a language switch. `bn` (Bengali): the shop's buttons, checkout and emails are in Bengali, machine translated (a native speaker's check is still pending); the legal pages and the generated home texts stay in English. Example: English primary with Bengali, `language: en`, `languages: [bn]`. The primary listed again changes nothing. Leave it out for a site. Any other code is refused with 422.",
+      "items": {
+       "type": "string",
+       "enum": [
+        "en",
+        "bg",
+        "bn"
+       ]
+      }
+     },
      "requestedSlug": {
       "type": "string",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",

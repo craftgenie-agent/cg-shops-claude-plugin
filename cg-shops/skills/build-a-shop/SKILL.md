@@ -48,7 +48,10 @@ The short version:
 
 - **Shop language:** the storefront, its emails and its legal pages are in
   **Bulgarian or English**. A shop for any other language is built in English
-  today. Say so before you draft it.
+  today. Say so before you draft it. One exception: a shop in English can add
+  **Bengali** as a second storefront language (see `references/international.md`).
+  Shoppers then get the buttons, cart, checkout and their emails in Bengali; the
+  legal pages and the home page texts stay in English.
 - **Country and currency:** any country. Prices in the currency the merchant
   chooses (an ISO code such as EUR, GBP, USD). Currencies the euro replaced,
   such as BGN or HRK, are refused: convert the prices to EUR.
@@ -106,6 +109,10 @@ Fill in only what the person said or approved. Never invent facts.
   shop.
 - `language`: `bg` or `en` only. Leave it out to use the country's default
   (Bulgarian for Bulgaria, English elsewhere).
+- `languages`: extra storefront languages, only when they ask for them and
+  only if `create_shop` has this field. Bengali: `languages: ["bn"]` with
+  `language: "en"`. If the field is not there, say Bengali cannot be added from
+  this chat yet.
 - `productHints`: every product they mention, each with `name` and `price` in
   the shop's currency. Mark products or prices you proposed with
   `suggested: true`. Set `physical: false` for services and downloads. Do not
