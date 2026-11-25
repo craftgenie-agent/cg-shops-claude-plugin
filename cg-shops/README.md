@@ -2,7 +2,8 @@
 
 Build an online shop on [CG Shops](https://www.cgshops.com/en) by talking
 with Claude. CG Shops is made by Aspar Software. It works for
-businesses in any country. Shops are built in English or Bulgarian today.
+businesses in any country. Shops are built in English or Bulgarian today. A
+shop in English can also have Bengali as a second storefront language.
 
 ## What it does
 
